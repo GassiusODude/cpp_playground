@@ -15,12 +15,14 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_subdirectory(src)
+add_subdirectory(src/math)
 add_subdirectory(apps)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
+
 # install rules
-install(TARGETS lib0 DESTINATION lib)
-install(FILES include/lib0.hpp DESTINATION include)
+install(TARGETS kcpp_math DESTINATION lib)
+install(FILES include/math/matrix.hpp DESTINATION include)
