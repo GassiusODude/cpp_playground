@@ -1,4 +1,4 @@
-//#include "factorial.hpp"
+#include "factorial.hpp"
 int factorial(int val){
     if (val <= 1)
         return 1;
