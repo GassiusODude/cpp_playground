@@ -1,0 +1,5 @@
+set(HEADER_LIST "${Playground_SOURCE_DIR}/include/math/factorial.hpp")
+add_library(cpp_math factorial.cxx ${HEADER_LIST})
+target_include_directories(cpp_math PUBLIC /include/math)
+target_compile_features(cpp_math PUBLIC cxx_std_11)
+source_group(TREE "${Playground_SOURCE_DIR}/include/math" PREFIX "Header Files" FILES ${HEADER_LIST})
