@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
 
-project(Playground
+PROJECT(Playground
     VERSION 0.1
     DESCRIPTION "Example project with CMake"
     LANGUAGES CXX)
@@ -10,15 +10,16 @@ include(CheckLanguage)
 #enable_language(CUDA)
 
 # set the C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_subdirectory(src)
-add_subdirectory(apps)
+ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(apps)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-    add_subdirectory(tests)
+    ADD_SUBDIRECTORY(tests)
 endif()
+
 # install rules
 #install(TARGETS kcpp_math DESTINATION lib)
 #install(FILES include/math/matrix.hpp DESTINATION include)
