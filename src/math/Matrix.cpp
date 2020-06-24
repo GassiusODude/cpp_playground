@@ -7,7 +7,7 @@ using namespace std;
 template <typename T>
 Matrix<T>::~Matrix(){
     delete [] matrix;
-}
+};
 
 template <typename T>
 Matrix<T>* Matrix<T>::operator+(Matrix<T> const &mat){
@@ -19,7 +19,8 @@ Matrix<T>* Matrix<T>::operator+(Matrix<T> const &mat){
     Matrix<T> *out = new Matrix(this->rows, this-> columns);
     for (int row=0; row<this->rows; row++)
         for (int col=0; col<this->columns; col++){
-            out->matrix[row][col] += mat.matrix[row][col];
+            out->matrix[row][col] = this->matrix[row][col]
+                + mat.matrix[row][col];
         }
     return out;
 }
@@ -34,10 +35,11 @@ Matrix<T>* Matrix<T>::operator-(Matrix<T> const &mat){
     Matrix<T> *out = new Matrix(this->rows, this-> columns);
     for (int row=0; row<this->rows; row++)
         for (int col=0; col<this->columns; col++){
-            out->matrix[row][col] -= mat.matrix[row][col];
+            out->matrix[row][col] = this->matrix[row][col]
+                - mat.matrix[row][col];
         }
     return out;
-}
+};
 
 template <typename T>
 void Matrix<T>::setElement(T value, int row, int col){
@@ -46,12 +48,11 @@ void Matrix<T>::setElement(T value, int row, int col){
     else if (col < 0 || col >= columns)
         std::cerr << "col is out of bounds of the Matrix\n";
     this->matrix[row][col] = value;
-}
+};
 
-template <typename T>
+template <class T>
 void Matrix<T>::print(){
-    cout << "Matrix/n";
-    cout << "\tRow = " << this->rows << endl;
+    cout << "Matrix," << "\tRow = " << this->rows;
     cout << "\tColumns = " << this->rows << endl;
 
     for (int row=0; row<this->rows; row++){
@@ -60,14 +61,8 @@ void Matrix<T>::print(){
         }
         cout << endl;
     }
-}
-/*
-template <typename T>
-int Matrix<T>::getRows(){ return this->rows; }
-template <typename T>
-int Matrix<T>::getColumns(){ return this->columns; }
-*/
+};
 
+// explicit instantiation of class templates
 template class Matrix<float>;
-//template void Matrix<float>::print();
-//template void Matrix<float>::setElement(float, int, int);
+template class Matrix<int>;

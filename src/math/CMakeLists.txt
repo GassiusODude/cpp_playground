@@ -1,4 +1,4 @@
-SET(HEADER_LIST_MATH "${Playground_SOURCE_DIR}/include/math/factorial.hpp")
+SET(HEADER_LIST_MATH ${Playground_SOURCE_DIR}/include/math/factorial.hpp ${Playground_SOURCE_DIR}/include/math/Matrix.hpp)
 
 ADD_LIBRARY(cpp_math SHARED factorial.cpp Matrix.cpp ${HEADER_LIST_MATH})
 

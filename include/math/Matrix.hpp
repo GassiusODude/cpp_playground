@@ -14,7 +14,7 @@ struct MatrixIncompatible : public std::exception{
 };
 
 template <typename T>
-class Matrix{
+class Matrix {
     public:
 
         /**
@@ -77,5 +77,3 @@ class Matrix{
         int columns = 0;
 
 };
-
-//template class Matrix<int>;
