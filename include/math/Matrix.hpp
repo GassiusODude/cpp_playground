@@ -16,29 +16,29 @@ struct MatrixIncompatible : public std::exception{
 template <typename T>
 class Matrix {
     public:
-
         /**
          * Constructor
          *
          * @param rows Number of rows
          * @param columns Number of columns per row.
          */
-        Matrix(int rows, int columns){
-            this->rows = rows;
-            this->columns = columns;
+        Matrix(int rows, int columns);
 
-            // initialize matrix
-            this->matrix = new T*[rows];
-            for (int row=0; row<rows; row++){
-                matrix[row] = new T[columns];
-            }
-        }
+        /**
+         * Constructor
+         *
+         * @param newMat The multi-dimension array to initialize the matrix
+         * @param rows Number of rows
+         * @param columns Number of columns per row.
+         */
+        Matrix(T *newMat, int rows, int columns);
 
         /**
          * Deconstructor
          */
         ~Matrix();
 
+        /** Print information about the matrix */
         void print();
 
         /**

@@ -2,7 +2,34 @@
 
 using namespace std;
 
-//template <typename T>
+
+template <typename T>
+Matrix<T>::Matrix(int rows, int columns){
+    this->rows = rows;
+    this->columns = columns;
+
+    // initialize matrix
+    this->matrix = new T*[rows];
+    for (int row=0; row<rows; row++){
+        matrix[row] = new T[columns];
+    }
+}
+
+template <typename T>
+Matrix<T>::Matrix(T *newMat, int rows, int columns){
+    this->rows = rows;
+    this->columns = columns;
+    // initialize matrix
+    this->matrix = new T*[rows];
+    for (int row=0; row<rows; row++){
+        matrix[row] = new T[columns];
+    }
+
+    // assign values
+    for (int ind0=0; ind0<rows; ind0++)
+        for(int ind1=0; ind1<columns; ind1++)
+            matrix[ind0][ind1] = newMat[ind0 * columns + ind1];
+};
 
 template <typename T>
 Matrix<T>::~Matrix(){
