@@ -57,6 +57,12 @@ class Matrix {
          */
         Matrix* operator-(Matrix const &m);
 
+        Matrix<T>* submatrix(int row, int col);
+
+        T determinant();
+
+        T determinant(Matrix *m);
+
         /**
          * Set an element in the stored matrix.
          * @tparam T is the data stored in the Matrix
@@ -64,16 +70,16 @@ class Matrix {
          * @param row The row of matrix to set the new value
          * @param col The column of matrix to set the new value
          */
-        void setElement(T value, int row, int col);
+        void set_element(T value, int row, int col);
 
         // ====================  getters and setters  =======================
-        int getRows(){ return rows; }
-        int getColumns(){ return columns; }
+        int getRows(){ return rows_; }
+        int getColumns(){ return columns_; }
 
     protected:
-        T **matrix;
+        T **matrix_;
     private:
-        int rows = 0;
-        int columns = 0;
+        int rows_ = 0;
+        int columns_ = 0;
 
 };

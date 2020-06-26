@@ -8,6 +8,7 @@ PROJECT(Playground
 include(CheckLanguage)
 #check_language(CUDA)
 #enable_language(CUDA)
+include(CTest)
 
 # set the C++ standard
 SET(CMAKE_CXX_STANDARD 11)
