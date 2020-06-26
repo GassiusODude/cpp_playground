@@ -1,34 +1,52 @@
 #include <iostream>
 #include "matrix.hpp"
-using namespace std;
-void testMatrix(){
-    // =============================  setup  ================================
-    float f1[9] = {10, 1, 2, 3, 4, 5, 6, 7, 12};
-    Matrix<float> *mat1 = new Matrix<float>(f1, 3, 3);
-    mat1->print();
-    cout << "Determinant of matrix 1 = " << mat1->determinant() << endl;
-    cout << "Determinant should be 118\n\n";
+#include "gtest/gtest.h"
+namespace {
+    class MatrixTest : public testing::Test{
+        public:
+            Matrix<float> *mat1;
+            Matrix<float> *mat2;
+            Matrix<float> *mat3;
+            Matrix<float> *mat4;
+            Matrix<float> *mat5;
 
-    Matrix<float> *mat2 = new Matrix<float> (3,3);
-    mat2->set_element(13, 1, 1);
-    mat2->print();
-    cout << "Determinant of matrix 2 = " << mat2->determinant() << endl;
-    cout << "Determinant should be 0\n\n";
+        protected:
+            void SetUp() override{
+                float f1[9] = {10, 1, 2, 3, 4, 5, 6, 7, 12};
+                mat1 = new Matrix<float>(f1, 3, 3);
+                mat2 = new Matrix<float>(3,3);
+                mat2->set_element(13, 1, 1);
+                mat3 = *mat1 + *mat2;
+                mat4 = mat3->submatrix(1,0);
+            }
 
-    // ==========================  test addition  ===========================
-    // TODO: switch to actually test/assert
-    Matrix<float> *mat3 = *mat1 + *mat2;
-    mat3->print();
-    cout << "Determinant of matrix 3 = " << mat3->determinant() << endl;
-    cout << "Determinant should be 1522\n\n";
+            void TearDown() override{
+                delete mat1;
+                delete mat2;
+                delete mat3;
+                delete mat4;
 
 
-    Matrix<float> *mat4 = mat3->submatrix(1,0);
-    mat4->print();
-    cout << "Determinant of matrix 4 = " << mat4->determinant() << endl;
-    cout << "Determinant should be -2\n\n";
-}
-
-int main(int, char**){
-    testMatrix();
+            }
+    };
+    TEST_F(MatrixTest, Add){
+        /*
+        Matrix<float> *mat3a = *mat1 + *mat2;
+        EXPECT_EQ(10, mat3->matrix_[0][0]);
+        EXPECT_EQ(1, mat3->matrix_[0][1]);
+        EXPECT_EQ(2, mat3->matrix_[0][2]);
+        EXPECT_EQ(3, mat3->matrix_[1][0]);
+        EXPECT_EQ(17, mat3->matrix_[1][1]);
+        EXPECT_EQ(5, mat3->matrix_[1][2]);
+        EXPECT_EQ(6, mat3->matrix_[2][0]);
+        EXPECT_EQ(7, mat3->matrix_[2][1]);
+        EXPECT_EQ(12, mat3->matrix_[2][2]);
+        delete mat3a;*/
+    }
+    TEST_F(MatrixTest, Determinant){
+        EXPECT_EQ(118, mat1->determinant());
+        EXPECT_EQ(0, mat2->determinant());
+        EXPECT_EQ(1522, mat3->determinant());
+        EXPECT_EQ(-2, mat4->determinant());
+    }
 }
