@@ -1,6 +1,6 @@
 SET(HEADER_LIST_MATH ${Playground_SOURCE_DIR}/include/math/factorial.hpp ${Playground_SOURCE_DIR}/include/math/matrix.hpp)
 
-ADD_LIBRARY(cpp_math SHARED factorial.cpp matrix.cpp ${HEADER_LIST_MATH})
+ADD_LIBRARY(cpp_math SHARED factorial.cpp frequency.cpp matrix.cpp ${HEADER_LIST_MATH})
 
 # specify directory for include files
 TARGET_INCLUDE_DIRECTORIES(cpp_math PUBLIC ${Playground_SOURCE_DIR}/include/math)
