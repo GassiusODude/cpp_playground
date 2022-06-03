@@ -59,6 +59,8 @@ class Matrix {
 
         Matrix<T>* submatrix(int row, int col);
 
+        T getIndex(int row, int col) { return matrix_[row][col]; }
+
         T determinant();
 
         T determinant(Matrix *m);

@@ -30,18 +30,19 @@ namespace {
             }
     };
     TEST_F(MatrixTest, Add){
-        /*
+
         Matrix<float> *mat3a = *mat1 + *mat2;
-        EXPECT_EQ(10, mat3->matrix_[0][0]);
-        EXPECT_EQ(1, mat3->matrix_[0][1]);
-        EXPECT_EQ(2, mat3->matrix_[0][2]);
-        EXPECT_EQ(3, mat3->matrix_[1][0]);
-        EXPECT_EQ(17, mat3->matrix_[1][1]);
-        EXPECT_EQ(5, mat3->matrix_[1][2]);
-        EXPECT_EQ(6, mat3->matrix_[2][0]);
-        EXPECT_EQ(7, mat3->matrix_[2][1]);
-        EXPECT_EQ(12, mat3->matrix_[2][2]);
-        delete mat3a;*/
+        EXPECT_EQ(10, mat3a->getIndex(0, 0));
+        EXPECT_EQ(1, mat3a->getIndex(0, 1));
+        EXPECT_EQ(2, mat3a->getIndex(0, 2));
+        EXPECT_EQ(3, mat3a->getIndex(1, 0));
+        EXPECT_EQ(17, mat3a->getIndex(1, 1));
+        EXPECT_EQ(5, mat3a->getIndex(1, 2));
+        EXPECT_EQ(6, mat3a->getIndex(2, 0));
+        EXPECT_EQ(7, mat3a->getIndex(2, 1));
+        EXPECT_EQ(12, mat3a->getIndex(2, 2));
+
+        //delete mat3a;
     }
     TEST_F(MatrixTest, Determinant){
         EXPECT_EQ(118, mat1->determinant());
