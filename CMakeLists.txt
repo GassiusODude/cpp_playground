@@ -1,41 +1,57 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10)
 
-PROJECT(Playground
+project(Playground
     VERSION 0.1
     DESCRIPTION "Example project with CMake"
-    LANGUAGES CXX)
+    LANGUAGES CXX
+)
 
-include(CheckLanguage)
-#check_language(CUDA)
-#enable_language(CUDA)
+# Prefer CONFIG packages (required for vcpkg)
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 
-# set the C++ standard
-SET(CMAKE_CXX_STANDARD 11)
-SET(CMAKE_CXX_STANDARD_REQUIRED True)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+# ------------------------------
+# C++ Standard (portable)
+# ------------------------------
+# This works for MSVC, GCC, and Clang — no manual flags needed
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(apps)
+# Do NOT add manual flags like -std=c++11 or -pthread.  
+# CMake chooses correct flags based on compiler.
 
-IF (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
-    ENABLE_TESTING()
-    INCLUDE(GoogleTest)
-    ADD_SUBDIRECTORY(tests)
-ENDIF()
+# ------------------------------
+# Subdirectories
+# ------------------------------
+add_subdirectory(src)
+add_subdirectory(apps)
 
+# ------------------------------
+# Optional Unit Tests
+# ------------------------------
+if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND BUILD_TESTING)
+    enable_testing()
+    include(GoogleTest)
+    add_subdirectory(tests)
+endif()
 
-# install rules
-#install(TARGETS kcpp_math DESTINATION lib)
-#install(FILES include/math/matrix.hpp DESTINATION include)
-INSTALL(TARGETS cpp_math DESTINATION lib)
-INSTALL(FILES include/math/factorial.hpp DESTINATION include/cppmath)
-INSTALL(TARGETS Playground DESTINATION bin)
-FIND_PACKAGE(Doxygen)
+# ------------------------------
+# Install Rules
+# ------------------------------
+install(TARGETS cpp_math DESTINATION lib)
+install(FILES include/math/factorial.hpp DESTINATION include/cppmath)
+install(TARGETS Playground DESTINATION bin)
+
+# ------------------------------
+# Doxygen (optional)
+# ------------------------------
+find_package(Doxygen QUIET)
 if (DOXYGEN_FOUND)
-    SET(DOXYGEN_GENERATE_HTML YES)
-    SET(DOXYGEN_GENERATE_MAN YES)
+    set(DOXYGEN_GENERATE_HTML YES)
+    set(DOXYGEN_GENERATE_MAN YES)
+
     doxygen_add_docs(
         doxygen
         ${Playground_SOURCE_DIR}
     )
-ENDIF()
+endif()
