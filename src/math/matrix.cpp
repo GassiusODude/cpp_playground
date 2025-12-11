@@ -1,51 +1,69 @@
 #include "matrix.hpp"
+#include <iostream>
 
 using namespace std;
 
-
 template <typename T>
-Matrix<T>::Matrix(int rows, int columns){
-    rows_ = rows;
-    columns_ = columns;
+Matrix<T>::Matrix(int rows, int columns)
+    : rows_(rows), columns_(columns)
+{
+    if (rows_ <= 0 || columns_ <= 0) {
+        matrix_ = nullptr;
+        return;
+    }
 
-    // initialize matrix
-    this->matrix_ = new T*[rows];
-    for (int row=0; row<rows_; row++){
-        matrix_[row] = new T[columns];
+    // allocate rows and zero-initialize each row
+    matrix_ = new T*[rows_];
+    for (int r = 0; r < rows_; ++r) {
+        matrix_[r] = new T[columns_](); // value-initialize (zeros for builtins)
     }
 }
 
 template <typename T>
-Matrix<T>::Matrix(T *newMat, int rows, int columns){
-    rows_ = rows;
-    columns_ = columns;
-    // initialize matrix
-    matrix_ = new T*[rows];
-    for (int row=0; row<rows; row++){
-        matrix_[row] = new T[columns];
+Matrix<T>::Matrix(T *newMat, int rows, int columns)
+    : rows_(rows), columns_(columns)
+{
+    if (rows_ <= 0 || columns_ <= 0) {
+        matrix_ = nullptr;
+        return;
     }
 
-    // assign values
-    for (int ind0=0; ind0<rows; ind0++)
-        for(int ind1=0; ind1<columns; ind1++)
-            matrix_[ind0][ind1] = newMat[ind0 * columns + ind1];
-};
+    matrix_ = new T*[rows_];
+    for (int r = 0; r < rows_; ++r) {
+        matrix_[r] = new T[columns_]();
+    }
+
+    // copy values from provided array (row-major)
+    for (int r = 0; r < rows_; ++r) {
+        for (int c = 0; c < columns_; ++c) {
+            matrix_[r][c] = newMat[r * columns_ + c];
+        }
+    }
+}
 
 template <typename T>
-Matrix<T>::~Matrix(){
-    delete [] matrix_;
-};
+Matrix<T>::~Matrix()
+{
+    if (!matrix_) return;
+
+    for (int r = 0; r < rows_; ++r) {
+        delete[] matrix_[r];
+    }
+    delete[] matrix_;
+    matrix_ = nullptr;
+}
 
 template <typename T>
-Matrix<T>* Matrix<T>::operator+(Matrix<T> const &mat){
+Matrix<T>* Matrix<T>::operator+(Matrix<T> const &mat)
+{
     // --------------------  error checking  --------------------------------
     if (this->rows_ != mat.rows_ || this->columns_ != mat.columns_)
         throw MatrixIncompatible();
 
     // ---------------  create output matrix and add  -----------------------
-    Matrix<T> *out = new Matrix(rows_, columns_);
-    for (int row=0; row<this->rows_; row++)
-        for (int col=0; col<this->columns_; col++){
+    Matrix<T> *out = new Matrix<T>(this->rows_, this->columns_);
+    for (int row = 0; row < this->rows_; ++row)
+        for (int col = 0; col < this->columns_; ++col) {
             out->matrix_[row][col] = this->matrix_[row][col]
                 + mat.matrix_[row][col];
         }
@@ -53,92 +71,114 @@ Matrix<T>* Matrix<T>::operator+(Matrix<T> const &mat){
 }
 
 template <typename T>
-Matrix<T>* Matrix<T>::operator-(Matrix<T> const &mat){
-    // --------------------  error checking  --------------------------------
+Matrix<T>* Matrix<T>::operator-(Matrix<T> const &mat)
+{
     if (this->rows_ != mat.rows_ || this->columns_ != mat.columns_)
         throw MatrixIncompatible();
 
-    // ---------------  create output matrix and add  -----------------------
-    Matrix<T> *out = new Matrix(this->rows_, this->columns_);
-    for (int row=0; row<this->rows_; row++)
-        for (int col=0; col<this->columns_; col++){
+    Matrix<T> *out = new Matrix<T>(this->rows_, this->columns_);
+    for (int row = 0; row < this->rows_; ++row)
+        for (int col = 0; col < this->columns_; ++col) {
             out->matrix_[row][col] = this->matrix_[row][col]
                 - mat.matrix_[row][col];
         }
     return out;
-};
+}
 
 template <typename T>
-void Matrix<T>::set_element(T value, int row, int col){
-    if (row < 0 || row >= rows_)
+void Matrix<T>::set_element(T value, int row, int col)
+{
+    if (row < 0 || row >= rows_) {
         std::cerr << "row is out of bounds of the Matrix\n";
-    else if (col < 0 || col >= columns_)
+        return;
+    }
+    if (col < 0 || col >= columns_) {
         std::cerr << "col is out of bounds of the Matrix\n";
+        return;
+    }
     this->matrix_[row][col] = value;
-};
+}
 
 template <typename T>
-void Matrix<T>::print(){
+void Matrix<T>::print()
+{
     cout << "Matrix," << "\tRow = " << this->rows_;
-    cout << "\tColumns = " << this->rows_ << endl;
+    cout << "\tColumns = " << this->columns_ << endl;
 
-    for (int row=0; row<this->rows_; row++){
-        for (int col=0; col<this->columns_; col++){
+    if (!matrix_) {
+        cout << "<empty matrix>" << endl;
+        return;
+    }
+
+    for (int row = 0; row < this->rows_; ++row) {
+        for (int col = 0; col < this->columns_; ++col) {
             cout << this->matrix_[row][col] << ", ";
         }
         cout << endl;
     }
-};
+}
 
 template <typename T>
-Matrix<T>* Matrix<T>::submatrix(int row, int col){
-    Matrix<T>* output;
-    if (this->rows_ <= 1 || this->columns_ <= 1){
-        output = new Matrix<T>(0, 0);
-    }
-    else{
-        output = new Matrix<T>(this->rows_-1, this->columns_-1);
-        int outRow=0, outCol=0;
-        int indRow, indCol;
-        for (indRow=0; indRow < this->rows_; indRow++){
-            if (indRow == row)
-                continue;
+Matrix<T>* Matrix<T>::submatrix(int row, int col)
+{
+    if (this->rows_ <= 0 || this->columns_ <= 0)
+        return new Matrix<T>(0, 0);
 
-            // reset the output column
-            outCol = 0;
-            for (indCol=0; indCol < this->columns_; indCol++){
-                if (indCol != col)
-                    output->matrix_[outRow][outCol++] = matrix_[indRow][indCol];
-            }
-            outRow++;
+    if (this->rows_ == 1 && this->columns_ == 1)
+        return new Matrix<T>(0, 0);
+
+    Matrix<T>* output = new Matrix<T>(this->rows_-1, this->columns_-1);
+    int outRow = 0;
+    for (int r = 0; r < this->rows_; ++r) {
+        if (r == row) continue;
+        int outCol = 0;
+        for (int c = 0; c < this->columns_; ++c) {
+            if (c == col) continue;
+            output->matrix_[outRow][outCol] = this->matrix_[r][c];
+            ++outCol;
         }
+        ++outRow;
     }
     return output;
-};
+}
 
 template <typename T>
-T Matrix<T>::determinant(){
+T Matrix<T>::determinant()
+{
     return determinant(this);
-};
+}
 
 template <typename T>
-T Matrix<T>::determinant(Matrix<T> *m){
-    // -------------------  handle exit conditions  -------------------------
-    if (m->getRows() == 0 || m->getColumns() == 0)
+T Matrix<T>::determinant(Matrix<T> *m)
+{
+    // safety checks
+    if (!m || !m->matrix_ || m->getRows() <= 0 || m->getColumns() <= 0)
         return 0;
-    if (m->getRows() == 2 && m->getColumns() == 2)
+
+    int R = m->getRows();
+    int C = m->getColumns();
+
+    // base cases
+    if (R == 1 && C == 1)
+        return m->matrix_[0][0];
+
+    if (R == 2 && C == 2)
         return m->matrix_[0][0] * m->matrix_[1][1]
             - m->matrix_[0][1] * m->matrix_[1][0];
 
-    // -------------------  get determinants of submatrics  -----------------
-    T sum = 0;
-    int mult = 1;
-    for (int col = 0; col < m->getColumns(); col++){
-        sum += m->matrix_[0][col] * mult * determinant(submatrix(0, col));
-        mult *= -1;
+    // recursive expansion by first row
+    T sum = static_cast<T>(0);
+    int sign = 1;
+    for (int c = 0; c < C; ++c) {
+        // create minor of m for (0,c)
+        Matrix<T>* minor = m->submatrix(0, c); // submatrix of m
+        T cofactor = m->matrix_[0][c] * static_cast<T>(sign) * determinant(minor);
+        sum += cofactor;
+        delete minor; // avoid memory leak
+        sign = -sign;
     }
     return sum;
-};
+}
 
 // explicit instantiation of class templates
 template class Matrix<float>;
