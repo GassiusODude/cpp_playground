@@ -6,6 +6,9 @@ project(Playground
     LANGUAGES CXX
 )
 
+include(CTest)
+option(BUILD_TESTING "Build tests" OFF)
+
 # Prefer CONFIG packages (required for vcpkg)
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 

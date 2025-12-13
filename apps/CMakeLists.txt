@@ -1,6 +1,11 @@
 add_executable(Playground playground.cxx)
 target_compile_features(Playground PUBLIC cxx_std_11)
 
+# NOTE: This is for use with ZMQ on Linux
+#       Resolves to nothing in Windows
+find_package(Threads REQUIRED)
+target_link_libraries(Playground PRIVATE Threads::Threads)
+
 #
 # Find packages via vcpkg (or any CMake config package)
 # These provide IMPORTED targets:
